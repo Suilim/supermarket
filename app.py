@@ -15,17 +15,19 @@ st.set_page_config(
 # ── 讀取帳號設定 ──────────────────────────────────────────────
 # 雲端用 st.secrets，本機用 config.yaml
 def load_config():
-    try:
-        # Streamlit Cloud Secrets
-        return {
-            "credentials": {
-                "usernames": dict(st.secrets["credentials"]["usernames"])
-            },
-            "cookie": dict(st.secrets["cookie"]),
-        }
-    except Exception:
+    import os
+    if os.path.exists("config.yaml"):
         with open("config.yaml") as f:
             return yaml.load(f, Loader=SafeLoader)
+    # Streamlit Cloud Secrets
+    return {
+        "credentials": {
+            "usernames": {
+                k: dict(v) for k, v in st.secrets["credentials"]["usernames"].items()
+            }
+        },
+        "cookie": dict(st.secrets["cookie"]),
+    }
 
 config = load_config()
 
