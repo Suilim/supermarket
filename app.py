@@ -20,6 +20,9 @@ def load_config():
         with open("config.yaml") as f:
             return yaml.load(f, Loader=SafeLoader)
     # Streamlit Cloud Secrets
+    if "credentials" not in st.secrets:
+        st.error("⚠️ 尚未設定 Secrets。請至 Streamlit Cloud → Manage app → Settings → Secrets 貼上帳號設定。")
+        st.stop()
     return {
         "credentials": {
             "usernames": {
